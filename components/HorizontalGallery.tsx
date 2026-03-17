@@ -1,12 +1,10 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef, useEffect, useCallback } from 'react';
 
 type GalleryItemType =
     | { type: 'image'; src: string; alt: string; span?: string }
     | { type: 'text'; title: string; text: string; bgColor: string; textColor: string; span?: string };
 
 const GALLERY_ITEMS: GalleryItemType[] = [
-    // ROW 1 flow
     { type: 'image', src: '/gallery1.jpg', alt: 'Gallery 1' },
     { type: 'image', src: '/gallery2.jpg', alt: 'Gallery 2' },
     {
@@ -30,8 +28,6 @@ const GALLERY_ITEMS: GalleryItemType[] = [
     { type: 'image', src: '/gallery7.jpg', alt: 'Gallery 7' },
     { type: 'image', src: '/gallery8.jpg', alt: 'Gallery 8' },
     { type: 'image', src: '/gallery9.jpg', alt: 'Gallery 9' },
-
-    // ROW 2 flow (will wrap automatically in grid-flow-col, but ordered for logic)
     { type: 'image', src: '/gallery10.jpg', alt: 'Gallery 10' },
     {
         type: 'text',
@@ -57,9 +53,120 @@ const GALLERY_ITEMS: GalleryItemType[] = [
     { type: 'image', src: '/gallery18.jpg', alt: 'Gallery 18' },
 ];
 
+// --- Constants ---
+const BASE_SPEED = 0.2;          // px per frame at 60fps (slow ambient scroll)
+const VELOCITY_DECAY = 0.96;     // How quickly swipe velocity decays (closer to 1 = longer momentum)
+const VELOCITY_LERP = 0.21;      // How quickly drag velocity ramps up (0–1, lower = more gradual)
+const VELOCITY_THRESHOLD = 0.02; // Stop applying velocity below this
+
 const HorizontalGallery: React.FC = () => {
-    // 3 sets for smooth loop width
     const SCROLL_ITEMS = [...GALLERY_ITEMS, ...GALLERY_ITEMS, ...GALLERY_ITEMS];
+
+    const stripRef = useRef<HTMLDivElement>(null);
+    const scrollX = useRef(0);
+    const rafId = useRef(0);
+    const extraVelocity = useRef(0);
+
+    // Pointer tracking
+    const isDragging = useRef(false);
+    const dragStartX = useRef(0);
+    const lastPointerX = useRef(0);
+    const lastPointerTime = useRef(0);
+
+    // ---- Animation loop ----
+    const tick = useCallback(() => {
+        // Apply extra velocity from swipe (decays toward 0)
+        if (Math.abs(extraVelocity.current) > VELOCITY_THRESHOLD) {
+            extraVelocity.current *= VELOCITY_DECAY;
+        } else {
+            extraVelocity.current = 0;
+        }
+
+        const speed = BASE_SPEED + extraVelocity.current;
+        scrollX.current += speed;
+
+        // Seamless loop: reset when we've scrolled past 1/3 of total content
+        if (stripRef.current) {
+            const oneThird = stripRef.current.scrollWidth / 3;
+            if (scrollX.current >= oneThird) {
+                scrollX.current -= oneThird;
+            } else if (scrollX.current < 0) {
+                scrollX.current += oneThird;
+            }
+            stripRef.current.style.transform = `translateX(${-scrollX.current}px)`;
+        }
+
+        rafId.current = requestAnimationFrame(tick);
+    }, []);
+
+    useEffect(() => {
+        rafId.current = requestAnimationFrame(tick);
+        return () => cancelAnimationFrame(rafId.current);
+    }, [tick]);
+
+    // ---- Shared pointer helpers ----
+    const onDragStart = useCallback((clientX: number) => {
+        isDragging.current = true;
+        dragStartX.current = clientX;
+        lastPointerX.current = clientX;
+        lastPointerTime.current = performance.now();
+        extraVelocity.current = 0; // kill momentum while dragging
+    }, []);
+
+    const onDragMove = useCallback((clientX: number) => {
+        if (!isDragging.current) return;
+        const dx = lastPointerX.current - clientX;
+        const now = performance.now();
+        const dt = Math.max(now - lastPointerTime.current, 1);
+
+        // Directly shift the scroll position for responsive feel
+        scrollX.current += dx;
+
+        // Gradually blend toward the instantaneous velocity for a natural ramp
+        const instantVelocity = (dx / dt) * 16;
+        extraVelocity.current += (instantVelocity - extraVelocity.current) * VELOCITY_LERP;
+
+        lastPointerX.current = clientX;
+        lastPointerTime.current = now;
+    }, []);
+
+    const onDragEnd = useCallback(() => {
+        isDragging.current = false;
+        // extraVelocity is already set from the last move — it will decay naturally in the tick loop
+    }, []);
+
+    // ---- Mouse events (desktop) ----
+    const handleMouseDown = useCallback((e: React.MouseEvent) => {
+        e.preventDefault();
+        onDragStart(e.clientX);
+    }, [onDragStart]);
+
+    const handleMouseMove = useCallback((e: React.MouseEvent) => {
+        onDragMove(e.clientX);
+    }, [onDragMove]);
+
+    const handleMouseUp = useCallback(() => {
+        onDragEnd();
+    }, [onDragEnd]);
+
+    const handleMouseLeave = useCallback(() => {
+        if (isDragging.current) onDragEnd();
+    }, [onDragEnd]);
+
+    // ---- Touch events (mobile / tablet) ----
+    const handleTouchStart = useCallback((e: React.TouchEvent) => {
+        onDragStart(e.touches[0].clientX);
+    }, [onDragStart]);
+
+    const handleTouchMove = useCallback((e: React.TouchEvent) => {
+        onDragMove(e.touches[0].clientX);
+    }, [onDragMove]);
+
+    const handleTouchEnd = useCallback(() => {
+        onDragEnd();
+    }, [onDragEnd]);
+
+
 
     return (
         <section className="bg-forest py-24 overflow-hidden relative border-t border-cornsilk/5">
@@ -71,44 +178,41 @@ const HorizontalGallery: React.FC = () => {
                 </div>
             </div>
 
-            <div className="relative w-full overflow-hidden mask-gradient-wide">
-                <motion.div
-                    className="flex gap-4"
-                    animate={{ x: "-33.33%" }}
-                    transition={{
-                        repeat: Infinity,
-                        ease: "linear",
-                        duration: 130
-                    }}
-                    style={{ width: "max-content" }}
+            <div
+                className="relative w-full overflow-hidden mask-gradient-wide select-none"
+                style={{ cursor: isDragging.current ? 'grabbing' : 'grab' }}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseLeave}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+            >
+                <div
+                    ref={stripRef}
+                    className="will-change-transform"
+                    style={{ width: 'max-content' }}
                 >
-                    {/* 
-                Grid Layout for the Items 
-                Using grid-rows-2 to force 2 rows, and grid-flow-col to fill columns first.
-                This creates the "strip" effect.
-             */}
                     <div className="grid grid-rows-2 grid-flow-col gap-4">
                         {SCROLL_ITEMS.map((item, index) => (
                             <div
                                 key={index}
                                 className={`
-                            relative overflow-hidden w-[200px] sm:w-[280px] md:w-[350px] h-[200px] sm:h-[280px] md:h-[350px]
-                            ${item.type === 'text' && item.bgColor !== 'bg-transparent' ? 'p-8 flex flex-col justify-between' : ''}
-                            ${item.type === 'text' && item.bgColor}
-                        `}
+                                    relative overflow-hidden w-[200px] sm:w-[280px] md:w-[350px] h-[200px] sm:h-[280px] md:h-[350px]
+                                    ${item.type === 'text' && item.bgColor !== 'bg-transparent' ? 'p-8 flex flex-col justify-between' : ''}
+                                    ${item.type === 'text' && item.bgColor}
+                                `}
                             >
                                 {item.type === 'image' ? (
-                                    <>
-                                        <img
-                                            src={item.src}
-                                            alt={item.alt}
-                                            className="w-full h-full object-cover grayscale-[10%] hover:grayscale-0 transition-all duration-700 hover:scale-105"
-                                        />
-                                        {/* Optional text overlay if desired, but inspiration is clean */}
-                                    </>
+                                    <img
+                                        src={item.src}
+                                        alt={item.alt}
+                                        className="w-full h-full object-cover grayscale-[10%] hover:grayscale-0 transition-all duration-700 hover:scale-105 pointer-events-none"
+                                        draggable={false}
+                                    />
                                 ) : (
                                     <div className={`h-full flex flex-col justify-between ${item.bgColor === 'bg-transparent' ? 'justify-start pt-0' : ''}`}>
-                                        {/* If transparent, it acts like the text block in inspiration next to image */}
                                         {item.bgColor === 'bg-transparent' ? (
                                             <div className="pr-4">
                                                 <h3 className="font-serif text-3xl text-cornsilk mb-4 leading-tight">
@@ -136,7 +240,7 @@ const HorizontalGallery: React.FC = () => {
                             </div>
                         ))}
                     </div>
-                </motion.div>
+                </div>
             </div>
         </section>
     );
