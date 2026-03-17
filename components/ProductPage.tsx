@@ -177,7 +177,7 @@ const ProductPage: React.FC = () => {
                     <div className="absolute top-0 right-0 w-96 h-96 bg-caramel/10 rounded-full blur-[100px] pointer-events-none" />
                     <div className="absolute bottom-0 left-0 w-96 h-96 bg-olive/10 rounded-full blur-[100px] pointer-events-none" />
 
-                    <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center relative z-10">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 grid md:grid-cols-2 gap-8 sm:gap-12 items-center relative z-10">
                         <motion.div
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -197,7 +197,7 @@ const ProductPage: React.FC = () => {
                                 Back onto menu
                             </Link>
 
-                            <h1 className="font-serif text-5xl md:text-6xl text-cornsilk">{product.name}</h1>
+                            <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl text-cornsilk">{product.name}</h1>
                             <div className="flex items-center gap-4">
                                 <span className="text-2xl text-caramel font-serif">{product.price}</span>
                                 {product.calories && (
@@ -214,8 +214,8 @@ const ProductPage: React.FC = () => {
                 </div>
 
                 {/* Customization Section */}
-                <div className="max-w-4xl mx-auto px-6 -mt-8 relative z-20">
-                    <div className="bg-cornsilk/5 backdrop-blur-md border border-cornsilk/10 rounded-3xl p-6 md:p-12 shadow-xl">
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 -mt-8 relative z-20">
+                    <div className="bg-cornsilk/5 backdrop-blur-md border border-cornsilk/10 rounded-3xl p-4 sm:p-6 md:p-12 shadow-xl">
                         <div className="flex items-center gap-3 mb-8 pb-6 border-b border-cornsilk/10">
                             <span className="p-2 bg-caramel/20 rounded-lg text-caramel">
                                 <ShoppingBag className="w-5 h-5" />

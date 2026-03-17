@@ -14,7 +14,7 @@ const AboutPage: React.FC = () => {
 
       <main className="pt-20">
         {/* Hero Section */}
-        <section className="relative h-[60vh] overflow-hidden flex items-center justify-center">
+        <section className="relative h-[50vh] sm:h-[60vh] overflow-hidden flex items-center justify-center">
           <div className="absolute inset-0">
             <motion.div style={{ y }} className="w-full h-[120%] -mt-[10%]">
               <img
@@ -26,12 +26,12 @@ const AboutPage: React.FC = () => {
             <div className="absolute inset-0 bg-forest/40 backdrop-blur-[2px]" />
           </div>
 
-          <div className="relative z-10 text-center space-y-4 px-6">
+          <div className="relative z-10 text-center space-y-4 px-4 sm:px-6">
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="font-serif text-6xl md:text-8xl text-cornsilk"
+              className="font-serif text-4xl sm:text-6xl md:text-8xl text-cornsilk"
             >
               Our Story
             </motion.h1>
@@ -47,7 +47,7 @@ const AboutPage: React.FC = () => {
         </section>
 
         {/* Owner Spotlight */}
-        <section className="py-24 px-6 max-w-7xl mx-auto">
+        <section className="py-12 sm:py-24 px-4 sm:px-6 max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
@@ -56,7 +56,7 @@ const AboutPage: React.FC = () => {
               transition={{ duration: 0.8 }}
               className="order-2 md:order-1 space-y-8"
             >
-              <h2 className="font-serif text-4xl md:text-5xl text-caramel">
+              <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-caramel">
                 Meet the Founder
               </h2>
               <div className="w-20 h-1 bg-copper/30" />
@@ -91,8 +91,8 @@ const AboutPage: React.FC = () => {
 
         {/* Values Section */}
         <section className="py-24 bg-black/20">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="grid md:grid-cols-3 gap-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
               {/* Image 1 */}
               <div className="relative h-96 group overflow-hidden">
                 <img

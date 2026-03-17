@@ -172,7 +172,7 @@ const CheckoutPage: React.FC = () => {
             {!showPaymentDetails ? (
                 <>
                     {/* Left Column: Order Summary (Dark Theme) */}
-                    <div className="w-full lg:w-1/2 bg-[#16291b] text-white p-8 lg:p-16 flex flex-col lg:min-h-screen relative overflow-hidden">
+                    <div className="w-full lg:w-1/2 bg-[#16291b] text-white p-4 sm:p-8 lg:p-16 flex flex-col lg:min-h-screen relative overflow-hidden">
                         <div className="mb-12">
                             <Link to="/menu" className="inline-flex items-center gap-2 text-stone-300 hover:text-white transition-colors">
                                 <ArrowLeft className="w-5 h-5" />
@@ -223,7 +223,7 @@ const CheckoutPage: React.FC = () => {
                     </div>
 
                     {/* Right Column: Checkout Forms */}
-                    <div className="w-full lg:w-1/2 bg-white text-stone-900 p-8 lg:p-16 flex flex-col lg:min-h-screen border-l border-stone-200">
+                    <div className="w-full lg:w-1/2 bg-white text-stone-900 p-4 sm:p-8 lg:p-16 flex flex-col lg:min-h-screen border-l border-stone-200">
                         <div className="max-w-lg mx-auto w-full pt-8">
                             <h1 className="text-3xl font-bold mb-8">Complete Order</h1>
                             
@@ -314,12 +314,12 @@ const CheckoutPage: React.FC = () => {
             ) : (
                 <>
                     {/* NEW Left Column: Add a credit / debit card */}
-                    <div className="w-full lg:w-1/2 bg-white text-stone-900 p-8 flex items-center justify-center lg:min-h-screen">
+                    <div className="w-full lg:w-1/2 bg-white text-stone-900 p-4 sm:p-8 flex items-center justify-center lg:min-h-screen">
                         <h1 className="text-3xl font-extrabold tracking-tight text-stone-800">Add a credit / debit card</h1>
                     </div>
 
                     {/* NEW Right Column: Payment Details Form */}
-                    <div className="w-full lg:w-1/2 bg-white text-stone-900 p-8 lg:p-16 flex flex-col lg:min-h-screen border-l border-stone-200">
+                    <div className="w-full lg:w-1/2 bg-white text-stone-900 p-4 sm:p-8 lg:p-16 flex flex-col lg:min-h-screen border-l border-stone-200">
                         <div className="max-w-lg mx-auto w-full pt-8">
                             <button onClick={() => setShowPaymentDetails(false)} className="mb-6 text-sm text-stone-600 hover:text-stone-900 flex items-center gap-1 font-medium transition-colors">
                                 <ArrowLeft className="w-4 h-4" /> Back to details
@@ -415,7 +415,7 @@ const CheckoutPage: React.FC = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="w-1/2 pr-2">
+                                        <div className="w-full sm:w-1/2 sm:pr-2">
                                             <div className="relative">
                                                 <input type="text" placeholder="* Security code" className="w-full border border-stone-300 rounded-lg p-3 text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#16291b] placeholder-stone-500 font-medium" />
                                                 <div className="absolute right-3 top-3.5 text-stone-400">
@@ -423,7 +423,7 @@ const CheckoutPage: React.FC = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="w-1/2 pr-2">
+                                        <div className="w-full sm:w-1/2 sm:pr-2">
                                             <input type="text" placeholder="* Billing ZIP" className="w-full border border-stone-300 rounded-lg p-3 text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#16291b] placeholder-stone-500 font-medium" />
                                         </div>
                                     </div>

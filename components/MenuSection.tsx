@@ -19,8 +19,8 @@ const MenuSection: React.FC<MenuSectionProps> = ({ onProductSelect }) => {
           />
           <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
         </div>
-        <div className="flex flex-col justify-center p-12 md:p-24 bg-cornsilk text-forest space-y-6">
-          <h2 className="font-serif text-4xl md:text-5xl">Seasonal Sips</h2>
+        <div className="flex flex-col justify-center p-6 sm:p-12 md:p-24 bg-cornsilk text-forest space-y-6">
+          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl">Seasonal Sips</h2>
           <p className="text-lg font-light leading-relaxed text-forest/80">
             Fall in love with our latest creations. From pumpkin spice infused with real spices to maple-pecan cold brews, every sip captures the essence of the season.
           </p>
@@ -32,8 +32,8 @@ const MenuSection: React.FC<MenuSectionProps> = ({ onProductSelect }) => {
 
       {/* Section 2: Artisan Bakery (Text Left, Image Right) */}
       <div className="grid md:grid-cols-2 min-h-[600px]">
-        <div className="order-2 md:order-1 flex flex-col justify-center p-12 md:p-24 bg-forest text-cornsilk space-y-6 border-t border-b border-cornsilk/5">
-          <h2 className="font-serif text-4xl md:text-5xl text-caramel">Fresh from the Oven</h2>
+        <div className="order-2 md:order-1 flex flex-col justify-center p-6 sm:p-12 md:p-24 bg-forest text-cornsilk space-y-6 border-t border-b border-cornsilk/5">
+          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-caramel">Fresh from the Oven</h2>
           <p className="text-lg font-light leading-relaxed text-cornsilk/80">
             A new era of bakery. Six new crave-worthy treats have arrived, blending global inspiration and nostalgic flavors. Find them in our refreshed bakery case.
           </p>
@@ -61,8 +61,8 @@ const MenuSection: React.FC<MenuSectionProps> = ({ onProductSelect }) => {
           />
           <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
         </div>
-        <div className="flex flex-col justify-center p-12 md:p-24 bg-olive text-cornsilk space-y-6">
-          <h2 className="font-serif text-4xl md:text-5xl">Join the Family</h2>
+        <div className="flex flex-col justify-center p-6 sm:p-12 md:p-24 bg-olive text-cornsilk space-y-6">
+          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl">Join the Family</h2>
           <p className="text-lg font-light leading-relaxed text-cornsilk/90">
             More than just coffee. Join our rewards program to earn points on every order, get early access to new blends, and receive exclusive invites to our tasting events.
           </p>

@@ -64,10 +64,10 @@ const HorizontalGallery: React.FC = () => {
     return (
         <section className="bg-forest py-24 overflow-hidden relative border-t border-cornsilk/5">
             {/* Section Header */}
-            <div className="max-w-[1400px] mx-auto px-6 mb-12 relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end">
+            <div className="max-w-[1400px] mx-auto px-4 sm:px-6 mb-12 relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end">
                 <span className="text-cornsilk/40 font-mono text-sm mb-4 md:mb-0">004</span>
                 <div className="text-right">
-                    <h2 className="font-serif text-5xl md:text-7xl text-cornsilk mb-2">Discover our world</h2>
+                    <h2 className="font-serif text-4xl sm:text-5xl md:text-7xl text-cornsilk mb-2">Discover our world</h2>
                 </div>
             </div>
 
@@ -92,7 +92,7 @@ const HorizontalGallery: React.FC = () => {
                             <div
                                 key={index}
                                 className={`
-                            relative overflow-hidden w-[280px] md:w-[350px] h-[280px] md:h-[350px]
+                            relative overflow-hidden w-[200px] sm:w-[280px] md:w-[350px] h-[200px] sm:h-[280px] md:h-[350px]
                             ${item.type === 'text' && item.bgColor !== 'bg-transparent' ? 'p-8 flex flex-col justify-between' : ''}
                             ${item.type === 'text' && item.bgColor}
                         `}

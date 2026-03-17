@@ -14,9 +14,9 @@ const Footer: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-forest via-forest/95 to-forest/80" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 pt-24 pb-12 relative z-10">
-        <div className="grid md:grid-cols-4 gap-16 mb-24">
-          <div className="col-span-2">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 sm:pt-24 pb-12 relative z-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-16 mb-12 sm:mb-24">
+          <div className="sm:col-span-2">
             <div className="mb-8 flex items-center space-x-4">
               <div className="w-12 h-12 bg-cornsilk/10 rounded-full border border-cornsilk/20 flex items-center justify-center backdrop-blur-sm overflow-hidden">
                 <img
@@ -59,7 +59,7 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
-        <div className="pt-12 border-t border-cornsilk/10 flex flex-col md:row justify-between items-center gap-6">
+        <div className="pt-8 sm:pt-12 border-t border-cornsilk/10 flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6">
           <p className="text-[10px] text-cornsilk/40 uppercase tracking-widest">
             © 2024 Corner Grounds Cafe. Designed by Your Agency.
           </p>

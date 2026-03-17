@@ -71,11 +71,11 @@ const BestsellersSection: React.FC = () => {
                 <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-olive rounded-full blur-[100px]" />
             </div>
 
-            <div className="max-w-7xl mx-auto px-6 relative z-10">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
                 {/* Header */}
                 <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-8">
                     <div className="space-y-4 max-w-2xl">
-                        <h2 className="font-serif text-5xl md:text-6xl text-cornsilk">
+                        <h2 className="font-serif text-3xl sm:text-5xl md:text-6xl text-cornsilk">
                             Our <span className="text-caramel italic">Bestsellers</span>
                         </h2>
                         <p className="text-cornsilk/70 text-lg font-light leading-relaxed">
@@ -139,9 +139,9 @@ const BestsellersSection: React.FC = () => {
                                 </div>
 
                                 {/* Content */}
-                                <div className="p-8 flex-1 flex flex-col justify-between space-y-4">
+                                <div className="p-5 sm:p-8 flex-1 flex flex-col justify-between space-y-3 sm:space-y-4">
                                     <div>
-                                        <h3 className="text-2xl font-serif text-cornsilk mb-2 group-hover:text-caramel transition-colors">
+                                        <h3 className="text-xl sm:text-2xl font-serif text-cornsilk mb-2 group-hover:text-caramel transition-colors">
                                             {item.title}
                                         </h3>
                                         <p className="text-cornsilk/60 font-light leading-relaxed">

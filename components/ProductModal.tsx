@@ -34,13 +34,13 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center px-3 sm:px-4 py-4">
       <div
         className="absolute inset-0 bg-forest/95 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      <div className="relative bg-forest w-full max-w-5xl grid md:grid-cols-2 overflow-hidden animate-fade-in border border-cornsilk/10 shadow-2xl rounded-lg">
+      <div className="relative bg-forest w-full max-w-5xl grid md:grid-cols-2 overflow-hidden animate-fade-in border border-cornsilk/10 shadow-2xl rounded-lg max-h-[90vh] overflow-y-auto">
         <button
           onClick={onClose}
           className="absolute top-6 right-6 z-10 text-cornsilk/50 hover:text-cornsilk transition-colors"
@@ -50,7 +50,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) => {
           </svg>
         </button>
 
-        <div className="relative group overflow-hidden bg-black flex items-center h-64 md:h-auto">
+        <div className="relative group overflow-hidden bg-black flex items-center h-48 sm:h-64 md:h-auto">
           <img
             src={product.image || '/menu3.jpg'}
             alt={product.name}
@@ -58,7 +58,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) => {
           />
         </div>
 
-        <div className="p-8 md:p-12 flex flex-col justify-center">
+        <div className="p-6 sm:p-8 md:p-12 flex flex-col justify-center">
           <span className="text-caramel font-bold uppercase tracking-widest text-xs mb-4">
             {product.category || 'Corner Grounds'}
           </span>

@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 
 const StorySection: React.FC = () => {
   return (
-    <section id="about" className="py-24 px-6 bg-forest">
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+    <section id="about" className="py-12 sm:py-24 px-4 sm:px-6 bg-forest">
+      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 md:gap-16 items-center">
         <div className="relative group overflow-hidden">
           <video
             src="/Story1.MOV"
@@ -23,21 +23,21 @@ const StorySection: React.FC = () => {
         <div className="space-y-8">
           <div className="space-y-4">
             <span className="text-caramel font-medium tracking-[0.2em] uppercase text-sm">Established in 2023</span>
-            <h2 className="font-serif text-5xl md:text-6xl leading-tight text-cornsilk">
+            <h2 className="font-serif text-3xl sm:text-5xl md:text-6xl leading-tight text-cornsilk">
               A Corner Dedicated to <br />
               <span className="italic">Excellence.</span>
             </h2>
           </div>
 
-          <p className="text-lg text-cornsilk/60 leading-relaxed font-light">
+          <p className="text-base sm:text-lg text-cornsilk/60 leading-relaxed font-light">
             Located in the historic heart of Odessa, Delaware, Corner Grounds Cafe isn't just a place to grab a coffee. It's a sanctuary for creators, a meeting spot for neighbors, and a destination for those who appreciate the finer details of bean and brew.
           </p>
 
-          <p className="text-lg text-cornsilk/60 leading-relaxed font-light">
+          <p className="text-base sm:text-lg text-cornsilk/60 leading-relaxed font-light">
             Our mission is simple: high-conversion flavors served in an environment that inspires. We source exclusively from sustainable growers, ensuring every cup reflects our commitment to the earth and the craft.
           </p>
 
-          <div className="grid grid-cols-2 gap-8 pt-8">
+          <div className="grid grid-cols-2 gap-4 sm:gap-8 pt-6 sm:pt-8">
             <div>
               <p className="text-4xl font-serif text-caramel mb-2">100%</p>
               <p className="text-xs uppercase tracking-widest text-cornsilk/40">Organic Beans</p>

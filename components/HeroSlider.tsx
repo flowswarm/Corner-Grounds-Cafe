@@ -56,14 +56,14 @@ const HeroSlider: React.FC = () => {
       ))}
 
       {/* Static Overlay Content (Title & Cafe) */}
-      <div className="absolute inset-0 flex items-center justify-center pt-20 md:pt-24 pb-12 pointer-events-none">
-        <div className="max-w-4xl px-6 text-center text-cornsilk">
+      <div className="absolute inset-0 flex items-center justify-center pt-24 md:pt-24 pb-8 sm:pb-12 pointer-events-none">
+        <div className="max-w-4xl px-4 sm:px-6 text-center text-cornsilk">
           <div className="relative z-10 flex flex-col items-center justify-center pointer-events-auto">
             {/* Animated Title */}
-            <div className="mb-[-20px] md:mb-[-40px] z-10 relative">
+            <div className="mb-[-10px] sm:mb-[-20px] md:mb-[-40px] z-10 relative">
               <GradualSpacing
                 text="Corner Grounds"
-                className="font-serif text-4xl md:text-6xl lg:text-7xl tracking-widest uppercase"
+                className="font-serif text-3xl sm:text-4xl md:text-6xl lg:text-7xl tracking-widest uppercase"
               />
             </div>
 
@@ -71,7 +71,7 @@ const HeroSlider: React.FC = () => {
             <div className="z-0 relative">
               <GradualSpacing
                 text="Cafe"
-                className="font-script text-[8rem] md:text-[12rem] lg:text-[16rem] leading-none text-caramel opacity-90 drop-shadow-lg transform -rotate-6 mix-blend-screen"
+                className="font-script text-[5rem] sm:text-[8rem] md:text-[12rem] lg:text-[16rem] leading-none text-caramel opacity-90 drop-shadow-lg transform -rotate-6 mix-blend-screen"
                 framerProps={{
                   hidden: { opacity: 0, x: 20 },
                   visible: { opacity: 1, x: 0 },
@@ -79,25 +79,25 @@ const HeroSlider: React.FC = () => {
               />
             </div>
 
-            <div className="w-24 h-1 bg-caramel/80 mt-8 mb-8"></div>
+            <div className="w-16 sm:w-24 h-1 bg-caramel/80 mt-4 sm:mt-8 mb-4 sm:mb-8"></div>
 
             {/* Dynamic Subtitle */}
-            <div className="h-24 md:h-20 flex items-center justify-center mb-10">
+            <div className="h-16 sm:h-24 md:h-20 flex items-center justify-center mb-6 sm:mb-10">
               {SLIDES.map((slide, index) => (
                 <p
                   key={index}
-                  className={`absolute text-lg md:text-xl text-cornsilk/90 font-light tracking-wide max-w-lg mx-auto italic transition-opacity duration-1000 ${index === current ? 'opacity-100' : 'opacity-0'}`}
+                  className={`absolute text-sm sm:text-lg md:text-xl text-cornsilk/90 font-light tracking-wide max-w-xs sm:max-w-lg mx-auto italic transition-opacity duration-1000 px-2 ${index === current ? 'opacity-100' : 'opacity-0'}`}
                 >
                   {slide.subtitle}
                 </p>
               ))}
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-              <Link to="/menu" className="w-full sm:w-auto px-10 py-5 bg-cornsilk text-forest font-bold uppercase tracking-widest text-sm hover:bg-caramel hover:text-white transition-all duration-300 rounded-none cursor-pointer">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6">
+              <Link to="/menu" className="w-full sm:w-auto px-8 sm:px-10 py-3 sm:py-5 bg-cornsilk text-forest font-bold uppercase tracking-widest text-xs sm:text-sm hover:bg-caramel hover:text-white transition-all duration-300 rounded-none cursor-pointer text-center">
                 Order Online
               </Link>
-              <Link to="/menu" className="w-full sm:w-auto px-10 py-5 border border-cornsilk/40 text-cornsilk font-bold uppercase tracking-widest text-sm hover:bg-cornsilk hover:text-forest transition-all duration-300 rounded-none cursor-pointer">
+              <Link to="/menu" className="w-full sm:w-auto px-8 sm:px-10 py-3 sm:py-5 border border-cornsilk/40 text-cornsilk font-bold uppercase tracking-widest text-xs sm:text-sm hover:bg-cornsilk hover:text-forest transition-all duration-300 rounded-none cursor-pointer text-center">
                 Our Menu
               </Link>
             </div>
