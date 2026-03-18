@@ -1,11 +1,24 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { MENU_DATA } from '../data/menuData';
 
 const MenuPage: React.FC = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.hash) {
+            const id = location.hash.replace('#', '');
+            setTimeout(() => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 300);
+        }
+    }, [location]);
 
     return (
         <div className="min-h-screen bg-stone-50 flex flex-col">
@@ -24,7 +37,7 @@ const MenuPage: React.FC = () => {
             <main className="flex-grow container mx-auto px-4 py-16">
                 <div className="grid gap-16">
                     {MENU_DATA.map(category => (
-                        <section key={category.id}>
+                        <section key={category.id} id={category.id} className="scroll-mt-32">
                             <h2 className="text-3xl font-serif text-stone-800 mb-10 border-b border-stone-200 pb-4">{category.title}</h2>
                             {category.subcategories.map(sub => (
                                 <div key={sub.title} className="mb-12">

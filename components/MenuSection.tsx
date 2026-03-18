@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Product } from '../types';
 
 interface MenuSectionProps {
@@ -24,9 +25,9 @@ const MenuSection: React.FC<MenuSectionProps> = ({ onProductSelect }) => {
           <p className="text-lg font-light leading-relaxed text-forest/80">
             Fall in love with our latest creations. From pumpkin spice infused with real spices to maple-pecan cold brews, every sip captures the essence of the season.
           </p>
-          <button className="self-start px-8 py-3 bg-forest text-cornsilk font-bold uppercase tracking-widest text-sm hover:bg-caramel hover:text-black transition-all duration-300 rounded-full">
+          <Link to="/seasonal-menu" className="self-start px-8 py-3 bg-forest text-cornsilk font-bold uppercase tracking-widest text-sm hover:bg-caramel hover:text-black transition-all duration-300 rounded-full">
             View Seasonal Menu
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -37,9 +38,9 @@ const MenuSection: React.FC<MenuSectionProps> = ({ onProductSelect }) => {
           <p className="text-lg font-light leading-relaxed text-cornsilk/80">
             A new era of bakery. Six new crave-worthy treats have arrived, blending global inspiration and nostalgic flavors. Find them in our refreshed bakery case.
           </p>
-          <button className="self-start px-8 py-3 bg-cornsilk text-forest font-bold uppercase tracking-widest text-sm hover:bg-caramel hover:text-black transition-all duration-300 rounded-full">
+          <Link to="/menu#food" className="self-start px-8 py-3 bg-cornsilk text-forest font-bold uppercase tracking-widest text-sm hover:bg-caramel hover:text-black transition-all duration-300 rounded-full">
             Explore Bakery
-          </button>
+          </Link>
         </div>
         <div className="order-1 md:order-2 relative h-96 md:h-auto overflow-hidden group">
           <img
@@ -66,9 +67,9 @@ const MenuSection: React.FC<MenuSectionProps> = ({ onProductSelect }) => {
           <p className="text-lg font-light leading-relaxed text-cornsilk/90">
             More than just coffee. Join our rewards program to earn points on every order, get early access to new blends, and receive exclusive invites to our tasting events.
           </p>
-          <button className="self-start px-8 py-3 bg-cornsilk text-forest font-bold uppercase tracking-widest text-sm hover:bg-forest hover:text-cornsilk transition-all duration-300 rounded-full">
+          <Link to="/rewards" className="self-start px-8 py-3 bg-cornsilk text-forest font-bold uppercase tracking-widest text-sm hover:bg-forest hover:text-cornsilk transition-all duration-300 rounded-full">
             Join Rewards
-          </button>
+          </Link>
         </div>
       </div>
     </section>

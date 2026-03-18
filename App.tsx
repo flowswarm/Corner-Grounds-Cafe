@@ -18,6 +18,8 @@ import MenuPage from './pages/MenuPage';
 import ProductPage from './components/ProductPage';
 import AdminConnectPage from './pages/AdminConnectPage';
 import AdminEmailPage from './pages/AdminEmailPage';
+import SeasonalMenuPage from './pages/SeasonalMenuPage';
+import RewardsPage from './pages/RewardsPage';
 
 import BestsellersSection from './components/BestsellersSection';
 
@@ -65,11 +67,13 @@ const Home: React.FC = () => {
 
 
 const ScrollToTop = () => {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    if (!hash) {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, hash]);
 
   return null;
 };
@@ -91,6 +95,8 @@ const App: React.FC = () => {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/menu" element={<MenuPage />} />
             <Route path="/menu/product/:id" element={<ProductPage />} />
+            <Route path="/seasonal-menu" element={<SeasonalMenuPage />} />
+            <Route path="/rewards" element={<RewardsPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/admin/login" element={<AdminLoginPage />} />
             <Route path="/admin/connect-clover" element={<AdminConnectPage />} />

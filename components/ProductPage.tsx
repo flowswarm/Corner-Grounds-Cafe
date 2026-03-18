@@ -192,9 +192,9 @@ const ProductPage: React.FC = () => {
                             className="space-y-6"
                         >
                             {/* Breadcrumb / Back */}
-                            <Link to="/menu" className="inline-flex items-center text-cornsilk/60 hover:text-caramel transition-colors mb-4">
+                            <Link to={product.id.startsWith('deal-') || product.id.startsWith('new-') ? '/seasonal-menu' : '/menu'} className="inline-flex items-center text-cornsilk/60 hover:text-caramel transition-colors mb-4">
                                 <ArrowLeft className="w-4 h-4 mr-2" />
-                                Back onto menu
+                                {product.id.startsWith('deal-') || product.id.startsWith('new-') ? 'Back to seasonal menu' : 'Back onto menu'}
                             </Link>
 
                             <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl text-cornsilk">{product.name}</h1>

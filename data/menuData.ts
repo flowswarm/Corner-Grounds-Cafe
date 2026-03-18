@@ -250,6 +250,9 @@ export const getAllProducts = (): MenuItem[] => {
     return products;
 };
 
+import { getAllSeasonalProducts } from './seasonalMenuData';
+
 export const getProductById = (id: string): MenuItem | undefined => {
-    return getAllProducts().find(p => p.id === id);
+    return getAllProducts().find(p => p.id === id)
+        || getAllSeasonalProducts().find(p => p.id === id);
 };
