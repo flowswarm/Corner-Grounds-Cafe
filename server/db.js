@@ -37,6 +37,17 @@ const connectDB = async () => {
         pickup_time TIMESTAMP WITH TIME ZONE,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       );
+
+      CREATE TABLE IF NOT EXISTS email_settings (
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        notify_orders BOOLEAN DEFAULT true,
+        notify_connections BOOLEAN DEFAULT true,
+        notify_site_changes BOOLEAN DEFAULT true,
+        is_verified BOOLEAN DEFAULT false,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
     `);
 
         client.release();

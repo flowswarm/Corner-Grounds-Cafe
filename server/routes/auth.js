@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 const { pool } = require('../db');
+const { sendConnectionNotification } = require('../emailService');
 
 const CLOVER_ENV = process.env.CLOVER_ENV || 'sandbox';
 const CLOVER_BASE_URL = CLOVER_ENV === 'production' ? 'https://www.clover.com' : 'https://sandbox.dev.clover.com';
@@ -49,6 +50,19 @@ router.get('/callback', async (req, res) => {
             );
         } finally {
             client.release();
+        }
+
+        // Send connection notification emails
+        try {
+            const emailResult = await pool.query(
+                'SELECT email FROM email_settings WHERE notify_connections = true'
+            );
+            for (const row of emailResult.rows) {
+                sendConnectionNotification(row.email, merchant_id)
+                    .catch(err => console.error('Failed to send connection email to', row.email, err));
+            }
+        } catch (emailErr) {
+            console.error('Error querying email settings for connection notification:', emailErr);
         }
 
         res.redirect(`${process.env.BASE_URL}/admin/connect-clover?success=true&merchantId=${merchant_id}`);

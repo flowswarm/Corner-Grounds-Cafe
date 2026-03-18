@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Clock, Coffee } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useCart } from '../context/CartContext';
 import { getPickupSlots } from '../lib/api';
 import axios from '../lib/api'; // use the configured instance
+import { isWithinBusinessHours, getTodayHours, getNextOpenTime } from '../lib/businessHours';
 
 declare global {
     interface Window {
@@ -15,6 +16,16 @@ declare global {
 
 const CheckoutPage: React.FC = () => {
     const { items, cartTotal } = useCart();
+    const [isOpen, setIsOpen] = useState(true);
+
+    useEffect(() => {
+        setIsOpen(isWithinBusinessHours());
+        // Re-check every minute
+        const interval = setInterval(() => {
+            setIsOpen(isWithinBusinessHours());
+        }, 60000);
+        return () => clearInterval(interval);
+    }, []);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
@@ -153,6 +164,69 @@ const CheckoutPage: React.FC = () => {
             setLoading(false);
         }
     };
+
+    if (!isOpen) {
+        const todayHours = getTodayHours();
+        const nextOpen = getNextOpenTime();
+        return (
+            <div className="min-h-screen bg-[#16291b] flex flex-col">
+                <Navbar isScrolled={true} />
+                <div className="flex-grow flex items-center justify-center p-4">
+                    <div className="max-w-lg w-full text-center">
+                        {/* Icon */}
+                        <div className="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-white/10 backdrop-blur-sm">
+                            <Coffee className="w-12 h-12 text-caramel" />
+                        </div>
+
+                        {/* Message */}
+                        <h2 className="text-4xl sm:text-5xl font-serif text-cornsilk mb-4">
+                            We're Currently Closed
+                        </h2>
+                        <p className="text-stone-300 text-lg mb-8 leading-relaxed max-w-md mx-auto">
+                            Sorry, we're not accepting orders right now. Our kitchen is resting, but we'll be back soon!
+                        </p>
+
+                        {/* Hours Card */}
+                        <div className="bg-white/5 rounded-2xl p-6 mb-8 border border-white/10 max-w-sm mx-auto">
+                            <div className="flex items-center justify-center gap-2 mb-4">
+                                <Clock className="w-4 h-4 text-caramel" />
+                                <span className="text-xs uppercase tracking-[0.2em] font-bold text-caramel">Today's Hours</span>
+                            </div>
+                            <p className="text-2xl font-serif text-cornsilk mb-1">
+                                {todayHours.dayName}
+                            </p>
+                            <p className="text-stone-300 text-lg">
+                                {todayHours.open} — {todayHours.close}
+                            </p>
+
+                            <div className="mt-4 pt-4 border-t border-white/10">
+                                <p className="text-stone-400 text-sm">
+                                    We reopen <span className="text-cornsilk font-medium">{nextOpen.dayName}</span> at <span className="text-cornsilk font-medium">{nextOpen.open}</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex flex-col sm:flex-row gap-3 max-w-sm mx-auto">
+                            <Link
+                                to="/menu"
+                                className="flex-1 bg-white/10 hover:bg-white/20 text-cornsilk font-bold py-3.5 px-6 rounded-full transition-all text-center border border-white/10"
+                            >
+                                Browse Menu
+                            </Link>
+                            <Link
+                                to="/"
+                                className="flex-1 bg-caramel hover:bg-white text-forest font-bold py-3.5 px-6 rounded-full transition-all text-center"
+                            >
+                                Back Home
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+                <Footer />
+            </div>
+        );
+    }
 
     if (orderSuccess) {
         return (

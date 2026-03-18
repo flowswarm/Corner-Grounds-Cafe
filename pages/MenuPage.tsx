@@ -12,7 +12,7 @@ const MenuPage: React.FC = () => {
             <Navbar isScrolled={true} />
             <div className="relative h-[40vh] bg-stone-900 overflow-hidden">
                 <img
-                    src="/Hero2.jpg"
+                    src="/menuhero.jpg"
                     alt="Menu"
                     className="w-full h-full object-cover opacity-60"
                 />

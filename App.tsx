@@ -17,6 +17,7 @@ import AboutPage from './components/AboutPage';
 import MenuPage from './pages/MenuPage';
 import ProductPage from './components/ProductPage';
 import AdminConnectPage from './pages/AdminConnectPage';
+import AdminEmailPage from './pages/AdminEmailPage';
 
 import BestsellersSection from './components/BestsellersSection';
 
@@ -93,6 +94,7 @@ const App: React.FC = () => {
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/admin/login" element={<AdminLoginPage />} />
             <Route path="/admin/connect-clover" element={<AdminConnectPage />} />
+            <Route path="/admin/email" element={<AdminEmailPage />} />
           </Routes>
         </div>
       </Router>

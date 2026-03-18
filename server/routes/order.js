@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { cloverRequest } = require('../clover');
 const { pool } = require('../db');
+const { sendOrderNotification } = require('../emailService');
 
 // GET /api/pickup-slots
 router.get('/pickup-slots', (req, res) => {
@@ -97,7 +98,24 @@ router.post('/checkout', async (req, res) => {
 
         await client.query('COMMIT');
 
-        // 6. Send Notification (Email) - Placeholder
+        // 6. Send Order Notification Emails
+        try {
+            const emailResult = await client.query(
+                'SELECT email FROM email_settings WHERE notify_orders = true'
+            );
+            for (const row of emailResult.rows) {
+                sendOrderNotification(row.email, {
+                    orderId: cloverOrder.id,
+                    customerName: customer?.name,
+                    customerEmail: customer?.email,
+                    total: finalTotal,
+                    pickupTime: pickup?.slotISO,
+                    items: cart,
+                }).catch(err => console.error('Failed to send order email to', row.email, err));
+            }
+        } catch (emailErr) {
+            console.error('Error querying email settings for order notification:', emailErr);
+        }
 
         res.json({ status: 'success', orderId: cloverOrder.id, total: finalTotal });
 

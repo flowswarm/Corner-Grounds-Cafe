@@ -84,6 +84,25 @@ const AdminConnectPage: React.FC = () => {
                             </button>
                         </div>
                     </div>
+
+                    {/* Email Notifications Link */}
+                    <div className="mt-8 pt-6 border-t border-stone-200">
+                        <button
+                            onClick={() => navigate('/admin/email')}
+                            className="w-full flex items-center justify-between p-4 rounded-lg border border-stone-200 hover:border-stone-400 hover:bg-stone-50 transition-all group"
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-stone-100 rounded-lg flex items-center justify-center group-hover:bg-stone-200 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-stone-600"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                                </div>
+                                <div className="text-left">
+                                    <p className="text-sm font-medium text-stone-800">Email Notifications</p>
+                                    <p className="text-xs text-stone-500">Manage alerts for orders, connections & updates</p>
+                                </div>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-stone-400 group-hover:text-stone-600 transition-colors"><path d="m9 18 6-6-6-6"/></svg>
+                        </button>
+                    </div>
                 </div>
             </main>
             <Footer />

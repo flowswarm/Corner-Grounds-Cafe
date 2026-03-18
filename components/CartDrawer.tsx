@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
+import { X, Minus, Plus, ShoppingBag, Trash2, Clock } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
+import { isWithinBusinessHours, getTodayHours } from '../lib/businessHours';
 
 const CartDrawer: React.FC = () => {
     const { items, isOpen, toggleCart, removeFromCart, updateQuantity, cartTotal } = useCart();
     const navigate = useNavigate();
+    const [cafeOpen, setCafeOpen] = useState(true);
+
+    useEffect(() => {
+        if (isOpen) {
+            setCafeOpen(isWithinBusinessHours());
+        }
+    }, [isOpen]);
 
     return (
         <AnimatePresence>
@@ -117,6 +125,7 @@ const CartDrawer: React.FC = () => {
                                     <span>Total</span>
                                     <span>${cartTotal.toFixed(2)}</span>
                                 </div>
+                                {cafeOpen ? (
                                 <button
                                     onClick={() => {
                                         toggleCart();
@@ -126,6 +135,17 @@ const CartDrawer: React.FC = () => {
                                 >
                                     Review Order
                                 </button>
+                            ) : (
+                                <div className="text-center space-y-2">
+                                    <div className="flex items-center justify-center gap-2 text-caramel">
+                                        <Clock className="w-4 h-4" />
+                                        <span className="text-xs uppercase tracking-[0.15em] font-bold">Currently Closed</span>
+                                    </div>
+                                    <p className="text-cornsilk/50 text-xs leading-relaxed">
+                                        Orders open {getTodayHours().open} — {getTodayHours().close} ({getTodayHours().dayName})
+                                    </p>
+                                </div>
+                            )}
                             </div>
                         )}
                     </motion.div>
