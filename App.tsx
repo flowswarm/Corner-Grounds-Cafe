@@ -18,6 +18,7 @@ import MenuPage from './pages/MenuPage';
 import ProductPage from './components/ProductPage';
 import AdminConnectPage from './pages/AdminConnectPage';
 import AdminEmailPage from './pages/AdminEmailPage';
+import AdminSmsPage from './pages/AdminSmsPage';
 import SeasonalMenuPage from './pages/SeasonalMenuPage';
 import RewardsPage from './pages/RewardsPage';
 
@@ -80,6 +81,7 @@ const ScrollToTop = () => {
 
 import { CartProvider } from './context/CartContext';
 import CartDrawer from './components/CartDrawer';
+import ReviewOrderPage from './pages/ReviewOrderPage';
 import CheckoutPage from './pages/CheckoutPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 
@@ -97,10 +99,12 @@ const App: React.FC = () => {
             <Route path="/menu/product/:id" element={<ProductPage />} />
             <Route path="/seasonal-menu" element={<SeasonalMenuPage />} />
             <Route path="/rewards" element={<RewardsPage />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/checkout" element={<ReviewOrderPage />} />
+            <Route path="/checkout/payment" element={<CheckoutPage />} />
             <Route path="/admin/login" element={<AdminLoginPage />} />
             <Route path="/admin/connect-clover" element={<AdminConnectPage />} />
             <Route path="/admin/email" element={<AdminEmailPage />} />
+            <Route path="/admin/sms" element={<AdminSmsPage />} />
           </Routes>
         </div>
       </Router>

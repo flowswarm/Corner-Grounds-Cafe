@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { pool } = require('../../_lib/db');
-const { CLOVER_BASE_URL } = require('../../_lib/helpers');
+const { CLOVER_API_URL } = require('../../_lib/helpers');
 
 module.exports = async (req, res) => {
   const { merchant_id, code } = req.query;
@@ -10,13 +10,14 @@ module.exports = async (req, res) => {
   }
 
   try {
-    // Exchange authorization code for access token
-    const tokenResponse = await axios.get(`${CLOVER_BASE_URL}/oauth/v2/token`, {
-      params: {
-        client_id: process.env.CLOVER_CLIENT_ID,
-        client_secret: process.env.CLOVER_CLIENT_SECRET,
-        code: code,
-      },
+    // Exchange authorization code for access token — uses API domain, NOT web domain
+    const tokenResponse = await axios.post(`${CLOVER_API_URL}/oauth/v2/token`, {
+      client_id: process.env.CLOVER_CLIENT_ID,
+      client_secret: process.env.CLOVER_CLIENT_SECRET,
+      code: code,
+      grant_type: 'authorization_code',
+    }, {
+      headers: { 'Content-Type': 'application/json' },
     });
 
     const {
@@ -29,24 +30,6 @@ module.exports = async (req, res) => {
     // Store in database
     const client = await pool.connect();
     try {
-      // Ensure table exists
-      await client.query(`
-        CREATE TABLE IF NOT EXISTS clover_connections (
-          id SERIAL PRIMARY KEY,
-          merchant_id VARCHAR(255) UNIQUE NOT NULL,
-          access_token TEXT NOT NULL,
-          access_token_expiration BIGINT,
-          refresh_token TEXT,
-          refresh_token_expiration BIGINT,
-          timezone VARCHAR(50) DEFAULT 'UTC',
-          notification_email VARCHAR(255),
-          lead_time_minutes INTEGER DEFAULT 20,
-          slot_interval_minutes INTEGER DEFAULT 10,
-          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-          updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-        );
-      `);
-
       await client.query(
         `INSERT INTO clover_connections (merchant_id, access_token, access_token_expiration, refresh_token, refresh_token_expiration)
          VALUES ($1, $2, $3, $4, $5)
@@ -69,15 +52,31 @@ module.exports = async (req, res) => {
       client.release();
     }
 
-    res.redirect(
-      302,
-      `${process.env.BASE_URL}/admin/connect-clover?success=true&merchantId=${merchant_id}`
-    );
+    // Validate the token by making a test API call
+    let permissionsValid = true;
+    try {
+      await axios.get(`${CLOVER_API_URL}/v3/merchants/${merchant_id}`, {
+        headers: { 'Authorization': `Bearer ${access_token}` },
+        timeout: 10000,
+      });
+      console.log('✅ Clover token validated — merchant API access confirmed');
+    } catch (validationErr) {
+      const status = validationErr.response?.status;
+      if (status === 401) {
+        console.error('❌ Clover token validation FAILED — 401 Unauthorized. App likely missing required permissions.');
+        permissionsValid = false;
+      } else {
+        console.warn('⚠️ Clover token validation returned non-401 error:', status, validationErr.response?.data);
+      }
+    }
+
+    if (permissionsValid) {
+      res.redirect(302, `${process.env.BASE_URL}/admin/connect-clover?success=true&merchantId=${merchant_id}`);
+    } else {
+      res.redirect(302, `${process.env.BASE_URL}/admin/connect-clover?success=true&merchantId=${merchant_id}&permissions=missing`);
+    }
   } catch (error) {
-    console.error(
-      'Clover OAuth Error:',
-      error.response?.data || error.message
-    );
+    console.error('Clover OAuth Error:', error.response?.data || error.message);
     res.status(500).send('Authentication Failed');
   }
 };

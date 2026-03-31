@@ -1,4 +1,4 @@
-import { MenuItem } from './menuData';
+import { MenuItem, CustomizationCategory } from './menuData';
 
 export interface SeasonalItem extends MenuItem {
     originalPrice?: string;
@@ -16,6 +16,134 @@ export interface WeeklyPromo {
     tag?: string;
 }
 
+// ── Reusable option sets for seasonal items ──────────────────────────────────
+
+const SYRUP_OPTIONS = [
+    { label: 'Vanilla', hasQuantity: true, default: 3, maxQuantity: 12 },
+    { label: 'Caramel', hasQuantity: true, default: 3, maxQuantity: 12 },
+    { label: 'Hazelnut', hasQuantity: true, default: 3, maxQuantity: 12 },
+    { label: 'Pumpkin Sauce', hasQuantity: true, default: 4, maxQuantity: 12 },
+    { label: 'Brown Sugar', hasQuantity: true, default: 3, maxQuantity: 12 },
+    { label: 'Mocha Sauce', hasQuantity: true, default: 3, maxQuantity: 12 },
+];
+
+const MILK_OPTIONS = [
+    { label: 'Whole Milk' }, { label: '2% Milk' }, { label: 'Nonfat Milk' },
+    { label: 'Oat Milk (+$0.80)' }, { label: 'Almond Milk (+$0.80)' }, { label: 'Coconut Milk (+$0.80)' },
+];
+
+const TOPPING_OPTIONS = [
+    { label: 'Whipped Cream' }, { label: 'Caramel Drizzle' }, { label: 'Mocha Drizzle' },
+    { label: 'Cinnamon Powder' }, { label: 'Cocoa Powder' },
+];
+
+const COLD_FOAM_OPTIONS = [
+    { label: 'Vanilla Sweet Cream Cold Foam' }, { label: 'Salted Caramel Cold Foam' },
+    { label: 'Chocolate Cold Foam' }, { label: 'Nondairy Cold Foam' },
+];
+
+const ICE_OPTIONS = [
+    { label: 'Regular Ice' }, { label: 'Light Ice' }, { label: 'Extra Ice' }, { label: 'No Ice' },
+];
+
+const ESPRESSO_ROAST_OPTIONS = [
+    { label: 'Signature Roast' }, { label: 'Blonde Roast' }, { label: 'Decaf' },
+];
+
+const CREAMER_OPTIONS = [
+    { label: 'Splash of 2% Milk' }, { label: 'Splash of Whole Milk' },
+    { label: 'Splash of Oat Milk (+$0.80)' }, { label: 'Splash of Cream' },
+];
+
+const SWEETENER_LIQUID_OPTIONS = [
+    { label: 'Classic Syrup', hasQuantity: true, default: 2, maxQuantity: 12 },
+    { label: 'Liquid Cane Sugar', hasQuantity: true, default: 2, maxQuantity: 12 },
+    { label: 'Honey Blend', hasQuantity: true, default: 2, maxQuantity: 12 },
+];
+
+const SWEETENER_PACKET_OPTIONS = [
+    { label: 'Sugar', hasQuantity: true, default: 1, maxQuantity: 12 },
+    { label: 'Stevia', hasQuantity: true, default: 1, maxQuantity: 12 },
+];
+
+function seasonalLatteCustomizations(): CustomizationCategory[] {
+    return [
+        { id: 'flavors', title: 'Flavors', items: [
+            { id: 'syrups', label: 'Add Syrups', type: 'dropdown', options: SYRUP_OPTIONS },
+        ]},
+        { id: 'sweeteners', title: 'Sweeteners', items: [
+            { id: 'liquid_sweetener', label: 'Add Liquid Sweetener', type: 'dropdown', options: SWEETENER_LIQUID_OPTIONS },
+        ]},
+        { id: 'toppings', title: 'Toppings', items: [
+            { id: 'whipped_cream', label: 'Add Whipped Cream', type: 'dropdown', options: [{ label: 'Whipped Cream' }] },
+            { id: 'topping_options', label: 'Add Toppings', type: 'dropdown', options: TOPPING_OPTIONS },
+        ]},
+        { id: 'espresso', title: 'Espresso & Shots', items: [
+            { id: 'espresso_roast', label: 'Espresso Roast', type: 'dropdown', options: ESPRESSO_ROAST_OPTIONS, default: 'Signature Roast' },
+            { id: 'shots', label: 'Shots', type: 'counter', defaultQuantity: 2 },
+        ]},
+        { id: 'milk_options', title: 'Milk', items: [
+            { id: 'milk', label: 'Milk', type: 'dropdown', options: MILK_OPTIONS, default: '2% Milk' },
+        ]},
+    ];
+}
+
+function seasonalColdBrewCustomizations(): CustomizationCategory[] {
+    return [
+        { id: 'flavors', title: 'Flavors', items: [
+            { id: 'syrups', label: 'Add Syrups', type: 'dropdown', options: SYRUP_OPTIONS },
+        ]},
+        { id: 'sweeteners', title: 'Sweeteners', items: [
+            { id: 'liquid_sweetener', label: 'Add Liquid Sweetener', type: 'dropdown', options: SWEETENER_LIQUID_OPTIONS },
+        ]},
+        { id: 'toppings', title: 'Toppings', items: [
+            { id: 'topping_options', label: 'Add Toppings', type: 'dropdown', options: TOPPING_OPTIONS },
+        ]},
+        { id: 'cold_foams', title: 'Cold Foams', items: [
+            { id: 'cold_foam', label: 'Add Cold Foam', type: 'dropdown', options: COLD_FOAM_OPTIONS },
+        ]},
+        { id: 'addins', title: 'Add-ins', items: [
+            { id: 'ice', label: 'Ice', type: 'dropdown', options: ICE_OPTIONS, default: 'Regular Ice' },
+            { id: 'creamer', label: 'Add Creamer', type: 'dropdown', options: CREAMER_OPTIONS },
+        ]},
+    ];
+}
+
+function seasonalTeaLatteCustomizations(): CustomizationCategory[] {
+    return [
+        { id: 'sweeteners', title: 'Sweeteners', items: [
+            { id: 'liquid_sweetener', label: 'Add Liquid Sweetener', type: 'dropdown', options: SWEETENER_LIQUID_OPTIONS },
+        ]},
+        { id: 'toppings', title: 'Toppings', items: [
+            { id: 'whipped_cream', label: 'Add Whipped Cream', type: 'dropdown', options: [{ label: 'Whipped Cream' }] },
+            { id: 'topping_options', label: 'Add Toppings', type: 'dropdown', options: TOPPING_OPTIONS },
+        ]},
+        { id: 'milk_options', title: 'Milk', items: [
+            { id: 'milk', label: 'Milk', type: 'dropdown', options: MILK_OPTIONS, default: '2% Milk' },
+        ]},
+    ];
+}
+
+function seasonalFoodCustomizations(): CustomizationCategory[] {
+    return [
+        { id: 'preparation', title: 'Preparation', items: [
+            { id: 'warming', label: 'Warming', type: 'dropdown', options: [{ label: 'Warmed' }, { label: 'Not Warmed' }], default: 'Warmed' },
+        ]},
+    ];
+}
+
+const DRINK_SIZES = [
+    { label: 'Small', oz: '12 fl oz' },
+    { label: 'Medium', oz: '16 fl oz' },
+    { label: 'Large', oz: '20 fl oz' },
+];
+
+const COLD_DRINK_SIZES = [
+    { label: 'Small', oz: '12 fl oz' },
+    { label: 'Medium', oz: '16 fl oz' },
+    { label: 'Large', oz: '24 fl oz' },
+];
+
 export const DAILY_DEALS: SeasonalItem[] = [
     {
         id: 'deal-pumpkin-latte',
@@ -28,7 +156,9 @@ export const DAILY_DEALS: SeasonalItem[] = [
         dealPrice: '$4.99',
         tag: "Today's Deal",
         calories: '320 calories',
-        type: 'coffee'
+        type: 'coffee',
+        sizes: DRINK_SIZES,
+        customizations: seasonalLatteCustomizations(),
     },
     {
         id: 'deal-maple-cold-brew',
@@ -41,7 +171,9 @@ export const DAILY_DEALS: SeasonalItem[] = [
         dealPrice: '$5.25',
         tag: "Today's Deal",
         calories: '180 calories',
-        type: 'coffee'
+        type: 'coffee',
+        sizes: COLD_DRINK_SIZES,
+        customizations: seasonalColdBrewCustomizations(),
     },
     {
         id: 'deal-chai-cookie',
@@ -54,7 +186,9 @@ export const DAILY_DEALS: SeasonalItem[] = [
         dealPrice: '$6.50',
         tag: 'Best Value',
         calories: '480 calories',
-        type: 'tea'
+        type: 'tea',
+        sizes: DRINK_SIZES,
+        customizations: seasonalTeaLatteCustomizations(),
     },
     {
         id: 'deal-morning-bun',
@@ -67,7 +201,8 @@ export const DAILY_DEALS: SeasonalItem[] = [
         dealPrice: '$5.99',
         tag: 'Breakfast Deal',
         calories: '380 calories',
-        type: 'food'
+        type: 'food',
+        customizations: seasonalFoodCustomizations(),
     },
 ];
 
@@ -111,7 +246,9 @@ export const NEW_ITEMS: SeasonalItem[] = [
         basePrice: 6.50,
         tag: 'NEW',
         calories: '210 calories',
-        type: 'coffee'
+        type: 'coffee',
+        sizes: DRINK_SIZES,
+        customizations: seasonalLatteCustomizations(),
     },
     {
         id: 'new-brown-sugar-espresso',
@@ -122,7 +259,9 @@ export const NEW_ITEMS: SeasonalItem[] = [
         basePrice: 6.00,
         tag: 'NEW',
         calories: '190 calories',
-        type: 'coffee'
+        type: 'coffee',
+        sizes: COLD_DRINK_SIZES,
+        customizations: seasonalColdBrewCustomizations(),
     },
     {
         id: 'new-matcha-croissant',
@@ -133,7 +272,8 @@ export const NEW_ITEMS: SeasonalItem[] = [
         basePrice: 5.50,
         tag: 'NEW',
         calories: '360 calories',
-        type: 'food'
+        type: 'food',
+        customizations: seasonalFoodCustomizations(),
     },
     {
         id: 'new-honey-cinnamon-cappuccino',
@@ -144,7 +284,9 @@ export const NEW_ITEMS: SeasonalItem[] = [
         basePrice: 6.00,
         tag: 'NEW',
         calories: '200 calories',
-        type: 'coffee'
+        type: 'coffee',
+        sizes: DRINK_SIZES,
+        customizations: seasonalLatteCustomizations(),
     },
     {
         id: 'new-tiramisu-cold-brew',
@@ -155,7 +297,9 @@ export const NEW_ITEMS: SeasonalItem[] = [
         basePrice: 7.00,
         tag: 'NEW',
         calories: '280 calories',
-        type: 'coffee'
+        type: 'coffee',
+        sizes: COLD_DRINK_SIZES,
+        customizations: seasonalColdBrewCustomizations(),
     },
     {
         id: 'new-spiced-apple-cider',
@@ -166,7 +310,9 @@ export const NEW_ITEMS: SeasonalItem[] = [
         basePrice: 5.50,
         tag: 'NEW',
         calories: '150 calories',
-        type: 'tea'
+        type: 'tea',
+        sizes: DRINK_SIZES,
+        customizations: seasonalTeaLatteCustomizations(),
     },
 ];
 

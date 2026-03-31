@@ -4,8 +4,10 @@ const axios = require('axios');
 const { pool } = require('../db');
 const { sendConnectionNotification } = require('../emailService');
 
-const CLOVER_ENV = process.env.CLOVER_ENV || 'sandbox';
+const CLOVER_ENV = (process.env.CLOVER_ENV || 'sandbox').trim();
 const CLOVER_BASE_URL = CLOVER_ENV === 'production' ? 'https://www.clover.com' : 'https://sandbox.dev.clover.com';
+// Token/refresh endpoints use the API domain, NOT the web domain
+const CLOVER_API_BASE_URL = CLOVER_ENV === 'production' ? 'https://api.clover.com' : 'https://apisandbox.dev.clover.com';
 
 // Step 1: Redirect to Clover for OAuth
 router.get('/start', (req, res) => {
@@ -15,23 +17,35 @@ router.get('/start', (req, res) => {
 
 // Step 2: Handle Callback
 router.get('/callback', async (req, res) => {
+    console.log('Clover OAuth Callback - Full URL:', req.originalUrl);
+    console.log('Clover OAuth Callback - Query params:', req.query);
     const { merchant_id, code } = req.query;
 
     if (!merchant_id || !code) {
-        return res.status(400).send('Missing merchant_id or code');
+        return res.status(400).send(`Missing merchant_id or code. Received params: ${JSON.stringify(req.query)}`);
     }
 
     try {
         // Exchange code for token
-        const tokenResponse = await axios.get(`${CLOVER_BASE_URL}/oauth/v2/token`, {
-            params: {
-                client_id: process.env.CLOVER_CLIENT_ID,
-                client_secret: process.env.CLOVER_CLIENT_SECRET,
-                code: code,
-            },
+        const tokenResponse = await axios.post(`${CLOVER_API_BASE_URL}/oauth/v2/token`, {
+            client_id: process.env.CLOVER_CLIENT_ID,
+            client_secret: process.env.CLOVER_CLIENT_SECRET,
+            code: code,
+            grant_type: 'authorization_code',
+        }, {
+            headers: { 'Content-Type': 'application/json' },
         });
 
+        console.log('=== CLOVER TOKEN RESPONSE ===');
+        console.log('Full response data:', JSON.stringify(tokenResponse.data, null, 2));
+        console.log('Response keys:', Object.keys(tokenResponse.data));
+
         const { access_token, access_token_expiration, refresh_token, refresh_token_expiration } = tokenResponse.data;
+        
+        console.log('access_token length:', access_token?.length);
+        console.log('access_token (first 50):', access_token?.substring(0, 50));
+        console.log('access_token_expiration:', access_token_expiration);
+        console.log('has refresh_token:', !!refresh_token);
 
         // Store in DB
         const client = await pool.connect();
@@ -65,10 +79,47 @@ router.get('/callback', async (req, res) => {
             console.error('Error querying email settings for connection notification:', emailErr);
         }
 
-        res.redirect(`${process.env.BASE_URL}/admin/connect-clover?success=true&merchantId=${merchant_id}`);
+        // Validate the token by making a test API call
+        let permissionsValid = true;
+        try {
+            await axios.get(`${CLOVER_API_BASE_URL}/v3/merchants/${merchant_id}`, {
+                headers: { 'Authorization': `Bearer ${access_token}` },
+                timeout: 10000,
+            });
+            console.log('✅ Clover token validated — merchant API access confirmed');
+        } catch (validationErr) {
+            const status = validationErr.response?.status;
+            if (status === 401) {
+                console.error('❌ Clover token validation FAILED — 401 Unauthorized. App likely missing required permissions.');
+                permissionsValid = false;
+            } else {
+                console.warn('⚠️ Clover token validation returned non-401 error:', status, validationErr.response?.data);
+                // Non-auth errors (network, 500, etc) — still consider connected, might be transient
+            }
+        }
+
+        const redirectBase = process.env.BASE_URL || 'http://localhost:3000';
+        if (permissionsValid) {
+            const redirectUrl = `${redirectBase}/admin/connect-clover?success=true&merchantId=${merchant_id}`;
+            console.log('✅ Redirecting to:', redirectUrl);
+            res.redirect(redirectUrl);
+        } else {
+            const redirectUrl = `${redirectBase}/admin/connect-clover?success=true&merchantId=${merchant_id}&permissions=missing`;
+            console.log('⚠️ Redirecting to (permissions missing):', redirectUrl);
+            res.redirect(redirectUrl);
+        }
     } catch (error) {
-        console.error('Clover OAuth Error:', error.response?.data || error.message);
-        res.status(500).send('Authentication Failed');
+        const errorData = error.response?.data;
+        const errorStatus = error.response?.status;
+        console.error('=== CLOVER OAUTH ERROR ===');
+        console.error('Token exchange URL:', `${CLOVER_API_BASE_URL}/oauth/v2/token`);
+        console.error('Status:', errorStatus);
+        console.error('Response:', JSON.stringify(errorData));
+        console.error('Client ID:', process.env.CLOVER_CLIENT_ID);
+        console.error('Redirect URI:', process.env.CLOVER_REDIRECT_URI);
+        
+        const errorMsg = errorData?.message || error.message || 'Unknown error';
+        res.redirect(`${process.env.BASE_URL}/admin/connect-clover?error=${encodeURIComponent(errorMsg)}`);
     }
 });
 
@@ -91,8 +142,8 @@ router.get('/status', async (req, res) => {
 // Mock Bypass for local testing (no DB required)
 router.get('/bypass', (req, res) => {
     const merchant_id = 'MOCK_MERCHANT_ID';
-    // Simply redirect back with success — no database needed
-    res.redirect(`http://localhost:3000/admin/connect-clover?success=true&merchantId=${merchant_id}`);
+    const redirectBase = process.env.BASE_URL || 'http://localhost:3000';
+    res.redirect(`${redirectBase}/admin/connect-clover?success=true&merchantId=${merchant_id}`);
 });
 
 module.exports = router;

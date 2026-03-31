@@ -1,0 +1,58 @@
+﻿[dotenv@17.3.1] injecting env (11) from .env -- tip: ≡ƒ¢í∩╕Å auth for agents: https://vestauth.com
+node : (node:37976) 
+Warning: SECURITY 
+WARNING: The SSL modes 
+'prefer', 'require', and 
+'verify-ca' are treated 
+as aliases for 
+'verify-full'.
+At line:1 char:1
++ node test_clover.js 
+2>&1 | Out-File -Encoding 
+utf8 test_output.txt
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo        
+      : NotSpecified: ((  
+  node:37976) Wa... 've   
+ rify-full'.:String) [    
+], RemoteException
+    + FullyQualifiedError 
+   Id : NativeCommandErr  
+  or
+ 
+In the next major version 
+(pg-connection-string 
+v3.0.0 and pg v9.0.0), 
+these modes will adopt 
+standard libpq semantics, 
+which have weaker 
+security guarantees.
+
+To prepare for this 
+change:
+- If you want the current 
+behavior, explicitly use 
+'sslmode=verify-full'
+- If you want libpq 
+compatibility now, use 'us
+elibpqcompat=true&sslmode=
+require'
+
+See https://www.postgresql
+.org/docs/current/libpq-ss
+l.html for libpq SSL mode 
+definitions.
+(Use `node 
+--trace-warnings ...` to 
+show where the warning 
+was created)
+Refreshing via POST /oauth/v2/refresh (JSON body)...
+Response: {"access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkZXZlbG9wZXItYXBwIiwiaXNzIjoiYXV0aC10b2tlbiIsImlhdCI6MTc3NDkxMjM5NiwiZXhwIjoxNzc0OTE0MTk2LCJtZXJjaGFudF91dWlkIjoiU1JGODg1RkpZN0ZQMSIsImFwcF91dWlkIjoiSDVRQUZOMkZCM0Y3QSIsInBlcm1pc3Npb25fYml0bWFwIjoxNjM4MiwiYWNjb3VudF91dWlkIjoiUFAxUkZCQktWRTdUUiIsIm1lcmNoYW50X2FwcF91dWlkIjoiQ0dINE5QWUVXQlRSRSJ9.bTXGWeGC0KSwxvkopsyMQpmPJxh4YQVKImACY6-Rbqk","access_token_expiration":1774914196,"refresh_token":"clvroar-9131432861cb46d6b798fd0832839dbf","refresh_token_expiration":1806448396}
+Token saved! Expires: 4/20/2026, 8:15:09 AM
+Merchant name: JohnDev - TOKEN WORKS!
+Order created: J37QECHTT1H8Y
+2 line items added
+Items: [ 'Cold Brew (Vanilla x3)', 'Bagel Cream Cheese' ]
+/pay status: 400 invalid_request
+CONFIRMED: /v1/orders/pay WORKS with v3 orders!
+Cleaned up test order

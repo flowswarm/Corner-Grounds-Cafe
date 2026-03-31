@@ -10,10 +10,19 @@ const authRoutes = require('./routes/auth');
 const menuRoutes = require('./routes/menu');
 const orderRoutes = require('./routes/order');
 const emailRoutes = require('./routes/email');
+const menuSyncRoutes = require('./routes/menuSync');
+const cloverHealthRoutes = require('./routes/cloverHealth');
+const ecommerceRoutes = require('./routes/ecommerce');
+const adminAuthRoutes = require('./routes/adminAuth');
+const smsConfigRoutes = require('./routes/smsConfig');
 const { connectDB } = require('./db');
+const { startPickupScheduler } = require('./pickupScheduler');
 
 // Connect to Database
-connectDB();
+connectDB().then(() => {
+    // Start pickup reminder scheduler after DB is ready
+    startPickupScheduler();
+});
 
 // Middleware
 app.use(cors());
@@ -24,6 +33,11 @@ app.use('/api/clover/oauth', authRoutes);
 app.use('/api/menu', menuRoutes);
 app.use('/api/order', orderRoutes);
 app.use('/api/admin/email', emailRoutes);
+app.use('/api/admin/menu-sync', menuSyncRoutes);
+app.use('/api/admin/clover-health', cloverHealthRoutes);
+app.use('/api/ecommerce', ecommerceRoutes);
+app.use('/api/admin', adminAuthRoutes);
+app.use('/api/admin/sms', smsConfigRoutes);
 
 app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date() });

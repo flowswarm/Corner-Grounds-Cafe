@@ -56,4 +56,33 @@ export const deleteEmailSetting = async (id: number) => {
     return response.data;
 };
 
+// SMTP Configuration
+export const getSmtpConfig = async () => {
+    const response = await api.get('/admin/email/smtp');
+    return response.data;
+};
+
+export const saveSmtpConfig = async (data: {
+    email: string;
+    password: string;
+    provider?: string;
+    smtp_host?: string;
+    smtp_port?: number;
+    smtp_secure?: boolean;
+    from_name?: string;
+}) => {
+    const response = await api.post('/admin/email/smtp', data);
+    return response.data;
+};
+
+export const detectSmtpProvider = async (email: string) => {
+    const response = await api.post('/admin/email/smtp/detect', { email });
+    return response.data;
+};
+
+export const deleteSmtpConfig = async () => {
+    const response = await api.delete('/admin/email/smtp');
+    return response.data;
+};
+
 export default api;

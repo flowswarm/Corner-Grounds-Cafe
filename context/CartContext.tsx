@@ -42,13 +42,19 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         localStorage.setItem('corner-grounds-cart', JSON.stringify(items));
     }, [items]);
 
-    const addToCart = (product: MenuItem, options: Record<string, any>, quantity: number) => {
-        // Calculate price with modifiers (simplified logic for now)
-        // In a real app, you'd calculate based on specific option costs
-        let unitPrice = product.basePrice;
+    const calculateUpcharge = (options: Record<string, any>): number => {
+        let upcharge = 0;
+        Object.values(options).forEach((val: any) => {
+            if (val && typeof val === 'object' && val.option) {
+                const match = val.option.match(/\+\$(\d+\.?\d*)/);
+                if (match) upcharge += parseFloat(match[1]);
+            }
+        });
+        return upcharge;
+    };
 
-        // Example: Add costs for specific options if needed
-        if (options.milk?.includes('+$0.80')) unitPrice += 0.80;
+    const addToCart = (product: MenuItem, options: Record<string, any>, quantity: number) => {
+        let unitPrice = product.basePrice + calculateUpcharge(options);
 
         const newItem: CartItem = {
             ...product,
@@ -59,7 +65,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         };
 
         setItems(prev => [...prev, newItem]);
-        setIsOpen(true); // Open cart when adding item
+        setIsOpen(true);
     };
 
     const removeFromCart = (cartId: string) => {
@@ -70,7 +76,6 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setItems(prev => prev.map(item => {
             if (item.cartId === cartId) {
                 const newQuantity = Math.max(1, item.quantity + delta);
-                //  Recalculate total price based on unit price derived from current total/quantity
                 const unitPrice = item.totalPrice / item.quantity;
                 return { ...item, quantity: newQuantity, totalPrice: unitPrice * newQuantity };
             }
@@ -81,10 +86,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const updateItem = (cartId: string, newOptions: Record<string, any>) => {
         setItems(prev => prev.map(item => {
             if (item.cartId === cartId) {
-                // Recalculate price based on new options (simplified logic same as addToCart)
-                let unitPrice = item.basePrice;
-                if (newOptions.milk?.includes('+$0.80')) unitPrice += 0.80;
-
+                let unitPrice = item.basePrice + calculateUpcharge(newOptions);
                 return {
                     ...item,
                     selectedOptions: newOptions,

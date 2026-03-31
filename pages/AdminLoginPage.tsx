@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
+import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
@@ -8,16 +9,23 @@ const AdminLoginPage: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (username === '1234' && password === '1234') {
+        setError('');
+        setLoading(true);
+
+        try {
+            await axios.post('/api/admin/login', { username, password });
             localStorage.setItem('adminAuthenticated', 'true');
             navigate('/admin/connect-clover');
-        } else {
-            setError('Invalid credentials');
+        } catch (err: any) {
+            setError(err.response?.data?.message || 'Invalid credentials');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -62,9 +70,10 @@ const AdminLoginPage: React.FC = () => {
                         </div>
                         <button
                             type="submit"
-                            className="w-full bg-stone-800 text-white py-2 rounded hover:bg-stone-700 transition-colors"
+                            disabled={loading}
+                            className="w-full bg-stone-800 text-white py-2 rounded hover:bg-stone-700 disabled:bg-stone-400 transition-colors"
                         >
-                            Login
+                            {loading ? 'Logging in...' : 'Login'}
                         </button>
                     </form>
                 </div>

@@ -50,8 +50,9 @@ router.get('/', async (req, res) => {
 
         // bucket items into categories
         items.forEach(item => {
-            if (!item.categories) return;
-            item.categories.forEach(catRef => {
+            const itemCategories = item.categories?.elements || [];
+            if (itemCategories.length === 0) return;
+            itemCategories.forEach(catRef => {
                 const category = menu.find(c => c.id === catRef.id);
                 if (category) {
                     category.items.push({

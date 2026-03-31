@@ -10,11 +10,12 @@ const CartDrawer: React.FC = () => {
     const navigate = useNavigate();
     const [cafeOpen, setCafeOpen] = useState(true);
 
-    useEffect(() => {
-        if (isOpen) {
-            setCafeOpen(isWithinBusinessHours());
-        }
-    }, [isOpen]);
+    // TEMPORARILY BYPASSED FOR TESTING - uncomment below to restore
+    // useEffect(() => {
+    //     if (isOpen) {
+    //         setCafeOpen(isWithinBusinessHours());
+    //     }
+    // }, [isOpen]);
 
     return (
         <AnimatePresence>
@@ -73,14 +74,36 @@ const CartDrawer: React.FC = () => {
 
                                             {/* Options Summary */}
                                             <div className="text-xs text-cornsilk/60 mb-3 space-y-1">
-                                                {Object.entries(item.selectedOptions).map(([key, value]) => {
-                                                    // Only show interesting options (skip defaults/empty/no)
-                                                    if (!value || value === 'None' || value === 'No' || value === false) return null;
-                                                    // Format key for display
-                                                    const label = key.replace(/_/g, ' ');
-                                                    // Format value for display (boolean to 'Yes')
-                                                    const displayValue = value === true ? 'Yes' : value;
+                                                {Object.entries(item.selectedOptions).map(([key, value]: [string, any]) => {
+                                                    // Skip internal keys
+                                                    if (key === '__size') {
+                                                        return (
+                                                            <div key={key} className="flex justify-between">
+                                                                <span>Size:</span>
+                                                                <span className="font-medium">{value?.option || value}</span>
+                                                            </div>
+                                                        );
+                                                    }
 
+                                                    // Handle new format: { option: string, quantity?: number }
+                                                    if (value && typeof value === 'object' && value.option) {
+                                                        const display = value.quantity
+                                                            ? `${value.option} × ${value.quantity}`
+                                                            : value.option;
+                                                        // Format key for display
+                                                        const label = key.replace(/_/g, ' ');
+                                                        return (
+                                                            <div key={key} className="flex justify-between">
+                                                                <span className="capitalize">{label}:</span>
+                                                                <span className="font-medium">{display}</span>
+                                                            </div>
+                                                        );
+                                                    }
+
+                                                    // Legacy format handling
+                                                    if (!value || value === 'None' || value === 'No' || value === false) return null;
+                                                    const label = key.replace(/_/g, ' ');
+                                                    const displayValue = value === true ? 'Yes' : value;
                                                     return (
                                                         <div key={key} className="flex justify-between">
                                                             <span className="capitalize">{label}:</span>
